@@ -18,7 +18,10 @@ const Navbar = () => {
             <div className="container mx-auto flex flex-col md:flex-row items-center justify-between py-3 px-6 lg:px-12">
                 {/* Logo (Always Left) */}
                 <div className="text-2xl font-semibold text-gradientStart mb-3 md:mb-0 md:mr-6">
-                    <span className="text-primaryText">ELEC</span>TO
+                    <span className="text-primaryText" onClick={navigate("/")}>
+                        ELEC
+                    </span>
+                    TO
                 </div>
 
                 {/* Search Bar (Wider on Large Screens) */}

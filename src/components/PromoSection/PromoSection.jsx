@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const promoItems = [
     {
@@ -40,11 +41,13 @@ const promoItems = [
 ];
 
 const PromoSection = () => {
+    const navigate = useNavigate();
     return (
         <div className="container mx-auto px-6 py-12">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {promoItems.map((item, index) => (
                     <div
+                        onClick={() => navigate("/products")}
                         key={item.id}
                         className={`relative flex flex-col md:flex-row items-center justify-between rounded-lg overflow-hidden shadow-lg p-6 ${item.bgColor} transition hover:scale-[1.02]`}>
                         {/* Left: Text Content */}
