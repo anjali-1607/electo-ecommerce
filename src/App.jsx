@@ -8,6 +8,8 @@ import Home from "./Home";
 import Cart from "./components/cart/Cart";
 import ProductList from "./components/ProductList/ProductList";
 import ProductDetail from "./components/ProductDetail/ProductDetail";
+// import CategoryProducts from "./components/CategoryProducts/CategoryProducts";
+import BestProductDetail from "./components/BestProductDetail/BestProductDetail";
 
 const App = () => {
     return (
@@ -18,6 +20,12 @@ const App = () => {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/products" element={<ProductList />} />
+                {/* <Route
+                    path="/category/:categoryName"
+                    element={<CategoryProducts />}
+                /> */}
+                <Route path="/product-detail" element={<BestProductDetail />} />
+
                 <Route
                     path="/product-description"
                     element={<ProductDetail />}

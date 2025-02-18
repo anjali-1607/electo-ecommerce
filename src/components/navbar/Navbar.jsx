@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     FaUser,
     FaHeart,
@@ -11,20 +11,33 @@ import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
+    const [loggedInUser, setLoggedInUser] = useState(null);
     const navigate = useNavigate();
+
+    // ✅ Check if user is logged in
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        setLoggedInUser(user);
+    }, []);
+
+    // ✅ Logout Function
+    const handleLogout = () => {
+        localStorage.removeItem("loggedInUser");
+        setLoggedInUser(null);
+        navigate("/"); // Redirect to home after logout
+    };
 
     return (
         <nav className="bg-navbarBg border-b border-borderColor font-inter">
             <div className="container mx-auto flex flex-col md:flex-row items-center justify-between py-3 px-6 lg:px-12">
-                {/* Logo (Always Left) */}
-                <div className="text-2xl font-semibold text-gradientStart mb-3 md:mb-0 md:mr-6">
-                    <span className="text-primaryText" onClick={navigate("/")}>
-                        ELEC
-                    </span>
-                    TO
+                {/* ✅ Logo (Always Left) */}
+                <div
+                    className="text-2xl font-semibold text-gradientStart mb-3 md:mb-0 md:mr-6 cursor-pointer"
+                    onClick={() => navigate("/")}>
+                    <span className="text-primaryText">ELEC</span>TO
                 </div>
 
-                {/* Search Bar (Wider on Large Screens) */}
+                {/* ✅ Search Bar (Wider on Large Screens) */}
                 <div className="w-full md:w-3/4 lg:w-2/3 flex justify-center order-2 md:order-1">
                     <div className="flex w-full max-w-2xl lg:max-w-3xl bg-searchBg rounded-md overflow-hidden border border-borderColor">
                         <input
@@ -38,17 +51,30 @@ const Navbar = () => {
                     </div>
                 </div>
 
-                {/* Icons Section (Right Side) */}
+                {/* ✅ Icons Section (Right Side) */}
                 <div className="flex items-center space-x-6 mt-3 md:mt-0 order-3 md:order-2">
-                    <div
-                        className="flex items-center space-x-2 cursor-pointer hover:text-gradientStart"
-                        onClick={() => navigate("/login")}>
-                        <FaUser className="text-lg" />
-                        <span className="text-sm font-medium hidden md:block">
-                            Account
-                        </span>
-                    </div>
+                    {/* ✅ Account/Login/Logout */}
+                    {loggedInUser ? (
+                        <div
+                            className="flex items-center space-x-2 cursor-pointer hover:text-gradientStart"
+                            onClick={handleLogout}>
+                            <FaUser className="text-lg" />
+                            <span className="text-sm font-medium hidden md:block">
+                                Logout
+                            </span>
+                        </div>
+                    ) : (
+                        <div
+                            className="flex items-center space-x-2 cursor-pointer hover:text-gradientStart"
+                            onClick={() => navigate("/login")}>
+                            <FaUser className="text-lg" />
+                            <span className="text-sm font-medium hidden md:block">
+                                Account
+                            </span>
+                        </div>
+                    )}
 
+                    {/* ✅ Wishlist */}
                     <div className="relative cursor-pointer hover:text-gradientStart">
                         <FaHeart className="text-lg" />
                         <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs px-2 rounded-full">
@@ -56,6 +82,7 @@ const Navbar = () => {
                         </span>
                     </div>
 
+                    {/* ✅ Cart */}
                     <div
                         className="relative cursor-pointer hover:text-gradientStart flex items-center"
                         onClick={() => navigate("/cart")}>
@@ -69,7 +96,7 @@ const Navbar = () => {
                     </div>
                 </div>
 
-                {/* Mobile Menu Button */}
+                {/* ✅ Mobile Menu Button */}
                 <button
                     className="md:hidden text-primaryText text-2xl absolute top-4 right-4"
                     onClick={() => setMenuOpen(!menuOpen)}>
@@ -77,11 +104,11 @@ const Navbar = () => {
                 </button>
             </div>
 
-            {/* Mobile Menu (Dropdown for Small Screens) */}
+            {/* ✅ Mobile Menu (Dropdown for Small Screens) */}
             {menuOpen && (
                 <div className="md:hidden bg-white border-t border-borderColor p-4">
                     <div className="flex flex-col space-y-4">
-                        {/* Search Bar for Mobile */}
+                        {/* ✅ Search Bar for Mobile */}
                         <div className="flex border border-borderColor rounded-md overflow-hidden bg-searchBg">
                             <input
                                 type="text"
@@ -93,16 +120,27 @@ const Navbar = () => {
                             </button>
                         </div>
 
-                        {/* Icons (Mobile) */}
+                        {/* ✅ Icons (Mobile) */}
                         <div className="flex flex-col space-y-3">
-                            <div
-                                className="flex items-center space-x-2 cursor-pointer hover:text-gradientStart"
-                                onClick={() => navigate("/login")}>
-                                <FaUser className="text-lg" />
-                                <span className="text-sm font-medium">
-                                    Account
-                                </span>
-                            </div>
+                            {loggedInUser ? (
+                                <div
+                                    className="flex items-center space-x-2 cursor-pointer hover:text-gradientStart"
+                                    onClick={handleLogout}>
+                                    <FaUser className="text-lg" />
+                                    <span className="text-sm font-medium">
+                                        Logout
+                                    </span>
+                                </div>
+                            ) : (
+                                <div
+                                    className="flex items-center space-x-2 cursor-pointer hover:text-gradientStart"
+                                    onClick={() => navigate("/login")}>
+                                    <FaUser className="text-lg" />
+                                    <span className="text-sm font-medium">
+                                        Account
+                                    </span>
+                                </div>
+                            )}
 
                             <div className="relative cursor-pointer hover:text-gradientStart">
                                 <FaHeart className="text-lg" />
@@ -111,7 +149,9 @@ const Navbar = () => {
                                 </span>
                             </div>
 
-                            <div className="relative cursor-pointer hover:text-gradientStart flex items-center">
+                            <div
+                                className="relative cursor-pointer hover:text-gradientStart flex items-center"
+                                onClick={() => navigate("/cart")}>
                                 <FaShoppingCart className="text-lg" />
                                 <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs px-2 rounded-full">
                                     3

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
     const [name, setName] = useState("");
@@ -11,24 +13,12 @@ const Register = () => {
 
     const validate = () => {
         const newErrors = {};
-
         if (!name) newErrors.name = "Name is required";
-        if (!email) {
-            newErrors.email = "Email is required";
-        } else if (!email.includes("@")) {
-            newErrors.email = "Email must include @";
-        }
-        if (!password) {
-            newErrors.password = "Password is required";
-        } else if (password.length < 6) {
-            newErrors.password = "Password must be at least 6 characters long";
-        }
-        if (!confirmPassword) {
-            newErrors.confirmPassword = "Confirm Password is required";
-        } else if (password !== confirmPassword) {
+        if (!email.includes("@")) newErrors.email = "Valid email is required";
+        if (password.length < 6)
+            newErrors.password = "Password must be at least 6 characters";
+        if (password !== confirmPassword)
             newErrors.confirmPassword = "Passwords do not match";
-        }
-
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -38,10 +28,22 @@ const Register = () => {
 
         if (validate()) {
             const users = JSON.parse(localStorage.getItem("users")) || [];
-            users.push({ name, email, password });
+            if (users.find((user) => user.email === email)) {
+                toast.error("Email already registered!", {
+                    position: "top-right",
+                });
+                return;
+            }
+
+            const newUser = { name, email, password };
+            users.push(newUser);
             localStorage.setItem("users", JSON.stringify(users));
-            alert("Registration successful!");
-            navigate("/");
+            localStorage.setItem("loggedInUser", JSON.stringify(newUser)); // Auto-login
+            toast.success("Registration successful! ✅", {
+                position: "top-right",
+            });
+
+            setTimeout(() => navigate("/"), 1000); // Redirect after 1 second
         }
     };
 
@@ -114,6 +116,29 @@ const Register = () => {
                         {errors.password && (
                             <p className="text-red-500 text-sm mt-1">
                                 {errors.password}
+                            </p>
+                        )}
+                    </div>
+
+                    <div className="mt-4">
+                        <label className="block text-sm font-semibold text-gray-700">
+                            Confirm Password{" "}
+                            <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="password"
+                            placeholder="Confirm your password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            className={`w-full px-4 py-2 mt-2 border rounded focus:outline-none focus:ring-2 ${
+                                errors.confirmPassword
+                                    ? "border-red-500 focus:ring-red-300"
+                                    : "focus:ring-gradientEnd"
+                            }`}
+                        />
+                        {errors.confirmPassword && (
+                            <p className="text-red-500 text-sm mt-1">
+                                {errors.confirmPassword}
                             </p>
                         )}
                     </div>

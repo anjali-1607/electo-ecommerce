@@ -8,12 +8,16 @@ import PromoBannerCarousel from "./components/PromoBannerCarousel/PromoBannerCar
 import Footer from "./components/Footer/Footer";
 import Brands from "./components/brands/Brands";
 import Testimonials from "./components/Testimonials/Testimonials";
+import Categories from "./components/categories/Categories";
+import SalesPromotions from "./components/SalesPromotion/SalesPromotions";
+import ContactUs from "./components/ContactUs/ContactUs";
 
 export default function Home() {
     return (
         <>
             <Navbar />
             <Carousel />
+            <Categories />
             <ProductCarousel />
             <PromoSection />
             <Brands />
@@ -21,6 +25,8 @@ export default function Home() {
             <PromoBannerCarousel />
             <ProductGrid />
             <Testimonials />
+            <SalesPromotions />
+            <ContactUs />
             <Footer />
         </>
     );
